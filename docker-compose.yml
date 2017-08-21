@@ -1,0 +1,51 @@
+version: '2'
+
+services:
+  db:
+    restart: always
+    image: postgres:9.6
+    environment:
+      POSTGRES_PASSWORD: forge
+      POSTGRES_USER: forge
+      POSTGRES_DB: forge
+    ports:
+      - "127.0.0.1:5432:5432"
+    volumes:
+      - /usr/src/postgres-data:/var/lib/postgresql/data
+  nginx:
+    restart: always
+    image: nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf.template:/etc/nginx/conf.d/default.conf.template
+      - ./uwsgi_params:/etc/nginx/uwsgi_params
+      - ./client/web/public/.:/usr/src/app/client/web/public
+      - ./client/dist/browser/.:/usr/src/app/client/dist/browser
+      - ./static_content/media/.:/usr/src/app/static_content/media
+      - ./static_content/static/.:/usr/src/app/static_content/static
+    command: >
+      /bin/bash -c "envsubst '$$FOO'
+      < /etc/nginx/conf.d/default.conf.template > /etc/nginx/conf.d/default.conf
+      && nginx -g 'daemon off;'"
+  server:
+    restart: always
+    build: ./server
+    env_file: .env
+    ports:
+      - "127.0.0.1:8000:8000"
+    volumes:
+      - ./static_content/media/.:/usr/src/app/static_content/media
+    entrypoint: uwsgi --socket :8000 --module forge.wsgi
+  collectstatic:
+    build: ./server
+    env_file: .env
+    volumes:
+      - ./static_content/static/.:/usr/src/app/static_content/static
+    command: collectstatic --noinput
+  frontend:
+    image: node:7.9
+    working_dir: /usr/src/app/client
+    volumes:
+      - ./client/.:/usr/src/app/client
+    command: npm run build
