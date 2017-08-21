@@ -43,9 +43,9 @@ services:
     volumes:
       - ./static_content/static/.:/usr/src/app/static_content/static
     command: collectstatic --noinput
-  frontend:
-    image: node:7.9
-    working_dir: /usr/src/app/client
-    volumes:
-      - ./client/.:/usr/src/app/client
-    command: npm run build
+#  frontend:
+#    image: node:7.9
+#    working_dir: /usr/src/app/client
+#    volumes:
+#      - ./client/.:/usr/src/app/client
+#    command: npm run build
