@@ -40,7 +40,7 @@ services:
   manage:
     build: ./server
     env_file: .env
-    command:
+    command: ""
   collectstatic:
     build: ./server
     env_file: .env
