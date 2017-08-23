@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 
 import os
 from envparse import env
+env.read_envfile('../../.env')
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -52,6 +53,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'django_celery_beat',
+    'api',
+    'banka',
 ]
 
 MIDDLEWARE = [
@@ -163,7 +166,20 @@ REST_FRAMEWORK = {
 }
 
 
+# Redis
+REDIS_CONNECTION = {
+    'HOST': 'redis',
+    'PORT': '6379',
+    'DATABASE': '0',
+}
+
+
 # Celery
 CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
 CELERY_BROKER_URL = 'redis://redis:6379/0'
 CELERY_RESULT_BACKEND = 'redis://redis:6379/0'
+
+
+# BANKASTANA
+BANKASTANA_LOGIN = env('BANKASTANA_LOGIN')
+BANKASTANA_PASSWORD = env('BANKASTANA_PASSWORD')

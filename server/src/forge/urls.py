@@ -19,6 +19,8 @@ from django.conf import settings
 
 urlpatterns = [
     url(r'^zangarmarsh/', admin.site.urls),
+    url(r'^api/', include('api.urls', namespace='api')),
+    url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 ]
 
 if settings.DEBUG:
