@@ -37,12 +37,26 @@ services:
     volumes:
       - ./static_content/media/.:/usr/src/app/static_content/media
     entrypoint: uwsgi --socket :8000 --module forge.wsgi
+  manage:
+    build: ./server
+    env_file: .env
+    command:
   collectstatic:
     build: ./server
     env_file: .env
     volumes:
       - ./static_content/static/.:/usr/src/app/static_content/static
     command: collectstatic --noinput
+  celery-worker:
+    restart: always
+    build: ./server
+    env_file: .env
+    entrypoint: celery -A forge worker -l info
+  celery-beat:
+    restart: always
+    build: ./server
+    env_file: .env
+    entrypoint: celery -A forge beat -l info
 #  frontend:
 #    image: node:7.9
 #    working_dir: /usr/src/app/client
