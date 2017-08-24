@@ -3,7 +3,7 @@ upstream uwsgi {
 }
 
 upstream flower {
-    server 127.0.0.1:8001;
+    server flower:8001;
 }
 
 server {
@@ -64,11 +64,8 @@ server {
     }
 
     location /flower/ {
-        proxy_pass http://localhost:8001;
+        rewrite ^/flower/(.*)$ /$1 break;
+        proxy_pass http://flower;
         proxy_set_header Host $host;
-        proxy_redirect off;
-        proxy_http_version 1.1;
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection "upgrade";
     }
 }
