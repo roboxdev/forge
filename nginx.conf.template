@@ -65,7 +65,7 @@ server {
 
     location /flower/ {
         rewrite ^/flower/(.*)$ /$1 break;
-        proxy_pass http://flower;
+        proxy_pass http://servername:8001;
         proxy_set_header Host $host;
     }
 }
