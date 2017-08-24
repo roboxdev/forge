@@ -64,6 +64,13 @@ services:
     build: ./server
     env_file: .env
     entrypoint: celery -A forge beat -l info
+  flower:
+    restart: always
+    build: ./server
+    env_file: .env
+    ports:
+      - "127.0.0.1:8001:8001"
+    entrypoint: celery -A forge flower --port=8001 --url-prefix=flower
 #  frontend:
 #    image: node:7.9
 #    working_dir: /usr/src/app/client

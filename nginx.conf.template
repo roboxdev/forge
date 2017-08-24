@@ -2,6 +2,10 @@ upstream uwsgi {
     server server:8000;
 }
 
+upstream flower {
+    server server:8001;
+}
+
 server {
     listen 80;
     server_name  www.servername;
@@ -57,5 +61,11 @@ server {
         include     /etc/nginx/uwsgi_params;
         add_header Cache-Control no-cache;
         expires 5m;
+    }
+
+    location /flower/ {
+        rewrite ^/flower/(.*)$ /$1 break;
+        proxy_pass http://flower;
+        proxy_set_header Host $host;
     }
 }
