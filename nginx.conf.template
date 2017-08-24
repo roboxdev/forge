@@ -67,5 +67,7 @@ server {
         rewrite ^/flower/(.*)$ /$1 break;
         proxy_pass http://flower;
         proxy_set_header Host $host;
+        auth_basic "Flower";
+        auth_basic_user_file /etc/nginx/.htpasswd;
     }
 }

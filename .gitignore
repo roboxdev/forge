@@ -6,6 +6,7 @@ node_modules/
 .floo
 local_settings.py
 .env
+/.htpasswd
 /client/dist/
 .expo/
 npm-debug.*
