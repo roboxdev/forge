@@ -3,7 +3,7 @@ upstream uwsgi {
 }
 
 upstream flower {
-    server server:8001;
+    server 127.0.0.1:8001;
 }
 
 server {
@@ -64,8 +64,16 @@ server {
     }
 
     location /flower/ {
-        rewrite ^/flower/(.*)$ /$1 break;
-        proxy_pass http://localhost:8001;
+#        rewrite ^/flower/(.*)$ /$1 break;
+#        proxy_pass http://localhost:8001;
         proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        # enable this if and only if you use HTTPS
+        # proxy_set_header X-Forwarded-Proto https;
+        proxy_set_header Host $http_host;
+        # we don't want nginx trying to do something clever with
+        # redirects, we set the Host: header above already.
+        proxy_redirect off;
+        proxy_pass http://flower;
     }
 }
