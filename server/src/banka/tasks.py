@@ -3,7 +3,7 @@ from celery import shared_task
 from celery.utils.log import get_logger
 from django.conf import settings
 
-from .utils import set_cards, set_session_token, get_session_token
+from .utils import set_cards, set_session_token, get_session_token, renew_token_ttl
 
 logger = get_logger(__name__)
 
@@ -48,8 +48,8 @@ def fetch_and_save_cards_task(self, force_auth=False):
         else:
             logger.error('Unknown error_code: %s', error_code)
     elif status == 'success':
+        renew_token_ttl()
         accounts_response_data = accounts_response.get('data')
         cards = accounts_response_data.get('cards')
         set_cards(cards)
-
 

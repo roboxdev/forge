@@ -15,6 +15,10 @@ def set_session_token(token):
     r.setex(BANKA_SESSION_TOKEN_KEY, 60 * 5, token)
 
 
+def renew_token_ttl():
+    r.expire(BANKA_SESSION_TOKEN_KEY, 60 * 5)
+
+
 def get_balance():
     cards = json.loads(r.get(BANKA_CARDS_KEY))
     balance_sum = sum(c.get('balance') for c in cards)
